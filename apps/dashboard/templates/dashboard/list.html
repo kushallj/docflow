@@ -1,0 +1,43 @@
+{% extends "dashboard/base.html" %}
+{% load humanize_extras %}
+{% block title %}Documents{% endblock %}
+{% block content %}
+<div class="row" style="margin-bottom:16px">
+  <div class="grow"><h1>Documents</h1><p class="sub" style="margin:0">Upload invoices; OCR reads them, the rules decide, people handle the rest.</p></div>
+</div>
+{% if member.role != 'viewer' %}
+<form class="dropzone panel" method="post" action="{% url 'dashboard:upload' %}" enctype="multipart/form-data" style="margin-bottom:18px">
+  {% csrf_token %}
+  <select name="document_type">{% for t in doc_types %}<option value="{{ t.slug }}">{{ t.name }}</option>{% endfor %}</select>
+  <input type="file" name="files" multiple accept="{{ accept }}" required>
+  <button class="btn primary" type="submit">Upload and process</button>
+  <span class="sub" style="margin:0">PDF or image, up to 20 files at once</span>
+</form>
+{% endif %}
+<div class="tabs">
+  {% for value, label, n in tabs %}<a href="?status={{ value }}" class="{% if status == value %}on{% endif %}">{{ label }}<b>{{ n }}</b></a>{% endfor %}
+</div>
+<div class="panel" style="padding:0">
+{% if docs %}
+<table>
+  <thead><tr><th>Document</th><th>Vendor</th><th>Invoice no.</th><th style="text-align:right">Total</th><th>Status</th><th>Uploaded</th></tr></thead>
+  <tbody>
+  {% for d in docs %}
+  <tr>
+    <td><a href="{% url 'dashboard:detail' d.pk %}">{{ d.original_name }}</a><div class="sub" style="margin:0;font-size:12px">{{ d.document_type.name }}</div></td>
+    <td>{{ d.facts.vendor_name|default:"—" }}</td>
+    <td class="mono">{{ d.facts.invoice_number|default:"—" }}</td>
+    <td class="num">{% if d.facts.total_amount %}₹{{ d.facts.total_amount|inr }}{% else %}—{% endif %}</td>
+    <td><span class="badge s-{{ d.status }}">{{ d.get_status_display }}</span>{% if d.decided_by %}<span class="by">by {{ d.get_decided_by_display|lower }}</span>{% endif %}
+      {% if d.reasons and d.status != 'approved' %}<ul class="reasons">{% for r in d.reasons|slice:":2" %}<li>{{ r }}</li>{% endfor %}</ul>{% endif %}
+      {% if d.error %}<div class="missing">{{ d.error|truncatechars:90 }}</div>{% endif %}</td>
+    <td style="white-space:nowrap;color:var(--muted)">{{ d.created_at|date:"d M, H:i" }}</td>
+  </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<div class="empty">No documents here yet.</div>
+{% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends "dashboard/base.html" %}
+{% load humanize_extras %}
+{% block title %}Rules{% endblock %}
+{% block content %}
+<h1>Rules</h1>
+<p class="sub">Each rule set is a nested ALL / ANY condition tree. When several match, the strictest action wins: reject, then review, then approve.
+  Edit rules through the API (<code>/api/rulesets/</code>, used by the Flutter rule builder){% if user.is_staff %} or in <a href="/admin/rules/ruleset/">admin</a>{% endif %}.</p>
+{% for rs in rulesets %}
+<details class="rule panel" style="padding:0">
+  <summary>
+    <span class="dot {% if rs.is_active %}y{% else %}n{% endif %}"></span>
+    <b>{{ rs.name }}</b>
+    <span class="action-{{ rs.action }}">→ {{ rs.get_action_display }}{% if rs.route_to %} ({{ rs.route_to }}){% endif %}</span>
+    <span class="by" style="margin-left:auto">{{ rs.document_type.name }} · priority {{ rs.priority }} · v{{ rs.version }}{% if not rs.is_active %} · inactive{% endif %}</span>
+  </summary>
+  <div class="body">
+    {% if rs.description %}<p>{{ rs.description }}</p>{% endif %}
+    {% if rs.reason %}<p class="sub">Reviewers see: “{{ rs.reason }}”</p>{% endif %}
+    <pre class="tree mono">{{ rs.tree|pretty_json }}</pre>
+  </div>
+</details>
+{% empty %}<div class="panel empty">No rules yet. Run <code>python manage.py seed_demo</code> for a starter set.</div>{% endfor %}
+
+<div class="panel">
+  <h2>Recent rule changes</h2>
+  <ul class="timeline">
+  {% for e in changes %}<li><time>{{ e.created_at|date:"d M H:i" }}</time><b>{{ e.action }}</b> “{{ e.data.name }}”{% if e.data.version %} → v{{ e.data.version }}{% endif %}{% if e.actor %} by {{ e.actor.username }}{% endif %}</li>
+  {% empty %}<li class="sub">No changes recorded yet.</li>{% endfor %}
+  </ul>
+</div>
+{% endblock %}

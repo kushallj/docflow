@@ -1,0 +1,143 @@
+{% extends "dashboard/base.html" %}
+{% load humanize_extras %}
+{% block title %}{{ doc.original_name }}{% endblock %}
+{% block content %}
+<p style="margin:0 0 6px"><a href="{% url 'dashboard:list' %}">← Documents</a></p>
+<div class="row" style="margin-bottom:16px">
+  <div class="grow">
+    <h1>{{ doc.original_name }}</h1>
+    <p class="sub" style="margin:0">{{ doc.document_type.name }} · uploaded {{ doc.created_at|date:"d M Y, H:i" }}
+      {% if doc.ocr_engine %} · OCR by {{ doc.ocr_engine }} in {{ doc.ocr_seconds }}s, mean confidence {{ doc.ocr_confidence|pct }}{% endif %}</p>
+  </div>
+</div>
+
+<div class="detail">
+  <section class="viewer">
+    {% for p in pages %}
+    <div class="page" data-w="{{ p.width }}" data-h="{{ p.height }}" data-page="{{ p.number }}">
+      <img src="{% url 'protected-file' p.image_path %}" alt="Page {{ p.number }}">
+    </div>
+    {% empty %}
+    <div class="panel empty">{% if doc.status == 'failed' %}Processing failed: {{ doc.error }}{% else %}Page preview appears after OCR.{% endif %}</div>
+    {% endfor %}
+    <p class="sub" style="font-size:12px">Boxes show where each field was read. Hover a field to highlight it. Amber boxes are below the {{ threshold|pct }} confidence threshold.</p>
+  </section>
+
+  <section>
+    <div class="panel">
+      <div class="decision">
+        <span class="badge s-{{ doc.status }}">{{ doc.get_status_display }}</span>
+        {% if doc.decided_by %}<span class="by">decided by {{ doc.get_decided_by_display|lower }}{% if doc.reviewed_by %} ({{ doc.reviewed_by.username }}){% endif %}</span>{% endif %}
+        {% if doc.queue %}<span class="by">queue: <b>{{ doc.queue }}</b></span>{% endif %}
+      </div>
+      {% if doc.reasons %}<ul class="reasons">{% for r in doc.reasons %}<li>{{ r }}</li>{% endfor %}</ul>{% endif %}
+      {% if doc.error %}<p class="missing">{{ doc.error }}</p>{% endif %}
+      {% if can_review %}
+      <form method="post" action="{% url 'dashboard:decide' doc.pk %}" class="row" style="margin-top:14px">
+        {% csrf_token %}
+        {% if doc.decided_by == 'person' %}
+          <button class="btn" name="decision" value="reopen">Reopen and re-run rules</button>
+        {% elif doc.status != 'processing' and doc.status != 'failed' %}
+          <input type="text" name="note" placeholder="Note for the audit log (optional)" class="grow">
+          <button class="btn ok" name="decision" value="approve">Approve</button>
+          <button class="btn bad" name="decision" value="reject">Reject</button>
+        {% endif %}
+        {% if doc.decided_by != 'person' %}<button class="btn" name="decision" value="reprocess" title="Run OCR again">Re-run OCR</button>{% endif %}
+      </form>
+      {% endif %}
+    </div>
+
+    <div class="panel">
+      <h2>Extracted fields</h2>
+      <table class="fields">
+        {% for row in fields %}
+        <tr data-key="{{ row.spec.key }}">
+          <td class="k">{{ row.spec.label }}{% if row.spec.required %} <span title="required">*</span>{% endif %}</td>
+          <td class="v">
+            {% if can_review and doc.decided_by != 'person' %}
+            <form method="post" action="{% url 'dashboard:correct' doc.pk %}">{% csrf_token %}
+              <input type="hidden" name="key" value="{{ row.spec.key }}">
+              <input type="text" name="value" value="{{ row.f.final_value|default_if_none:'' }}" placeholder="{% if row.spec.type == 'date' %}YYYY-MM-DD{% elif row.spec.type == 'number' %}0.00{% else %}—{% endif %}">
+              <button class="btn small" type="submit">Save</button>
+            </form>
+            {% else %}{{ row.f.final_value|default_if_none:"—" }}{% endif %}
+          </td>
+          <td style="width:92px">
+            {% if row.f.is_corrected %}<span class="edited">edited</span>
+            {% elif row.missing %}<span class="missing">not found</span>
+            {% else %}<span class="conf {% if row.low %}low{% endif %}" title="{{ row.f.method }}: {{ row.f.raw_text }}">{{ row.f.confidence|pct }} conf.</span>{% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </table>
+    </div>
+
+    <div class="panel">
+      <h2>Facts the rules saw</h2>
+      <div class="facts">
+        {% for d, v in derived %}
+        <div class="fact" title="{{ d.description }}">
+          <div class="l">{{ d.label }}</div>
+          <div class="val {% if v is True %}t{% elif v is False %}f{% endif %}">{% if v is True %}Yes{% elif v is False %}No{% else %}{{ v|default_if_none:"—" }}{% endif %}</div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>Rules</h2>
+      {% for r in doc.rule_results %}
+      <details class="rule" {% if r.matched or r.error %}open{% endif %}>
+        <summary>
+          <span class="dot {% if r.error %}e{% elif r.matched %}y{% else %}n{% endif %}"></span>
+          <b>{{ r.name }}</b>
+          <span class="action-{{ r.action }}">→ {{ r.action }}{% if r.route_to %} ({{ r.route_to }}){% endif %}</span>
+          <span class="by" style="margin-left:auto">{% if r.error %}invalid{% elif r.matched %}matched{% else %}did not match{% endif %} · v{{ r.version }}</span>
+        </summary>
+        <div class="body">
+          {% if r.error %}<p class="missing">{{ r.error }}</p>{% else %}{% include "dashboard/_trace.html" with nodes=r.trace|listify %}{% endif %}
+        </div>
+      </details>
+      {% empty %}<p class="sub">Rules run after OCR.</p>{% endfor %}
+    </div>
+
+    <div class="panel">
+      <h2>Audit log</h2>
+      <ul class="timeline">
+        {% for e in events %}
+        <li><time>{{ e.created_at|date:"d M H:i:s" }}</time><b>{{ e.action }}</b>{% if e.actor %} by {{ e.actor.username }}{% endif %}
+          {% if e.action == 'field.corrected' %}: {{ e.data.key }} <code>{{ e.data.before|default_if_none:"(empty)" }}</code> → <code>{{ e.data.after|default_if_none:"(empty)" }}</code>
+          {% elif e.action == 'rules.evaluated' %}: {{ e.data.decision }}{% if e.data.matched %} ({{ e.data.matched|join:", " }}){% endif %}
+          {% elif e.data.note %}: “{{ e.data.note }}”
+          {% elif e.data.error %}: {{ e.data.error }}{% endif %}</li>
+        {% endfor %}
+      </ul>
+    </div>
+  </section>
+</div>
+{{ boxes|json_script:"boxes" }}
+{% endblock %}
+{% block scripts %}
+<script>
+(function () {
+  const boxes = JSON.parse(document.getElementById("boxes").textContent);
+  const low = new Set([...document.querySelectorAll(".fields tr")].filter(tr => tr.querySelector(".conf.low")).map(tr => tr.dataset.key));
+  document.querySelectorAll(".page").forEach(page => {
+    const w = +page.dataset.w, h = +page.dataset.h, n = +page.dataset.page;
+    boxes.filter(b => b.page === n).forEach(b => {
+      const [x0, y0, x1, y1] = b.bbox, pad = 4;
+      const el = document.createElement("div");
+      el.className = "box" + (low.has(b.key) ? " low" : "");
+      el.dataset.key = b.key;
+      Object.assign(el.style, {left: (x0 - pad) / w * 100 + "%", top: (y0 - pad) / h * 100 + "%",
+        width: (x1 - x0 + 2 * pad) / w * 100 + "%", height: (y1 - y0 + 2 * pad) / h * 100 + "%"});
+      page.appendChild(el);
+    });
+  });
+  document.querySelectorAll(".fields tr").forEach(tr => {
+    const on = v => () => { tr.classList.toggle("hl", v); document.querySelectorAll(`.box[data-key="${tr.dataset.key}"]`).forEach(b => b.classList.toggle("hot", v)); };
+    tr.addEventListener("mouseenter", on(true)); tr.addEventListener("mouseleave", on(false));
+  });
+})();
+</script>
+{% endblock %}

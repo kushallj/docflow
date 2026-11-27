@@ -1,0 +1,33 @@
+{% load static %}<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}DocFlow{% endblock %} · DocFlow</title>
+  <link rel="stylesheet" href="{% static 'dashboard/app.css' %}">
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="{% url 'dashboard:list' %}">Doc<span>Flow</span></a>
+    {% if user.is_authenticated %}
+    <nav>
+      <a href="{% url 'dashboard:list' %}" class="{% if request.resolver_match.url_name == 'list' or request.resolver_match.url_name == 'detail' %}on{% endif %}">Documents</a>
+      <a href="{% url 'dashboard:rules' %}" class="{% if request.resolver_match.url_name == 'rules' %}on{% endif %}">Rules</a>
+      <a href="/api/">API</a>
+      {% if user.is_staff %}<a href="/admin/">Admin</a>{% endif %}
+    </nav>
+    <div class="who">
+      {% if member %}<span>{{ member.organization.name }} · {{ user.username }} ({{ member.get_role_display|lower }})</span>{% endif %}
+      <form method="post" action="{% url 'dashboard:logout' %}">{% csrf_token %}<button class="btn small">Sign out</button></form>
+    </div>
+    {% endif %}
+  </div>
+</header>
+<main class="wrap">
+  {% if messages %}<ul class="msgs">{% for m in messages %}<li class="{{ m.tags }}">{{ m }}</li>{% endfor %}</ul>{% endif %}
+  {% block content %}{% endblock %}
+</main>
+{% block scripts %}{% endblock %}
+</body>
+</html>

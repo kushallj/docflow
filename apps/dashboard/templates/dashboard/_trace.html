@@ -1,0 +1,13 @@
+<ul class="trace">
+{% for n in nodes %}
+  <li>
+    <div class="c">
+      <span class="{% if n.passed %}pass{% else %}fail{% endif %}">{% if n.passed %}✓{% else %}✗{% endif %}</span>
+      <span>{{ n.description }}</span>
+      {% if n.kind == 'condition' %}<span class="actual">actual: <code>{{ n.actual|default_if_none:"(empty)" }}</code></span>{% endif %}
+      {% if n.error %}<span class="err">{{ n.error }}</span>{% endif %}
+    </div>
+    {% if n.children %}{% include "dashboard/_trace.html" with nodes=n.children %}{% endif %}
+  </li>
+{% endfor %}
+</ul>

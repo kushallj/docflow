@@ -1,0 +1,542 @@
+{
+ "engine": "paddleocr",
+ "seconds": 34.019,
+ "pages": [
+  {
+   "number": 1,
+   "width": 1654,
+   "height": 2339,
+   "image_path": null,
+   "lines": [
+    {
+     "text": "Sharma Stationers",
+     "confidence": 1.0,
+     "bbox": [
+      99.0,
+      94.0,
+      486.0,
+      132.0
+     ],
+     "page": 1
+    },
+    {
+     "text": "TAX INVOICE",
+     "confidence": 0.9998,
+     "bbox": [
+      1136.0,
+      96.0,
+      1550.0,
+      151.0
+     ],
+     "page": 1
+    },
+    {
+     "text": "22 Karol Bagh",
+     "confidence": 0.9999,
+     "bbox": [
+      97.0,
+      160.0,
+      262.0,
+      188.0
+     ],
+     "page": 1
+    },
+    {
+     "text": "New Delhi 110005",
+     "confidence": 0.9999,
+     "bbox": [
+      96.0,
+      193.0,
+      311.0,
+      223.0
+     ],
+     "page": 1
+    },
+    {
+     "text": "GSTIN: 07ABCPS4821K1ZH",
+     "confidence": 0.995,
+     "bbox": [
+      98.0,
+      238.0,
+      488.0,
+      265.0
+     ],
+     "page": 1
+    },
+    {
+     "text": "Invoice No:",
+     "confidence": 1.0,
+     "bbox": [
+      96.0,
+      441.0,
+      261.0,
+      472.0
+     ],
+     "page": 1
+    },
+    {
+     "text": "SS/2026/1187",
+     "confidence": 1.0,
+     "bbox": [
+      358.0,
+      440.0,
+      553.0,
+      471.0
+     ],
+     "page": 1
+    },
+    {
+     "text": "Bill To:",
+     "confidence": 0.9853,
+     "bbox": [
+      896.0,
+      439.0,
+      1002.0,
+      474.0
+     ],
+     "page": 1
+    },
+    {
+     "text": "Invoice Date:",
+     "confidence": 1.0,
+     "bbox": [
+      97.0,
+      493.0,
+      287.0,
+      524.0
+     ],
+     "page": 1
+    },
+    {
+     "text": "24/11/2026",
+     "confidence": 1.0,
+     "bbox": [
+      357.0,
+      492.0,
+      514.0,
+      523.0
+     ],
+     "page": 1
+    },
+    {
+     "text": "Acme Retail Pvt Ltd",
+     "confidence": 0.9999,
+     "bbox": [
+      897.0,
+      493.0,
+      1165.0,
+      523.0
+     ],
+     "page": 1
+    },
+    {
+     "text": "Due Date:",
+     "confidence": 1.0,
+     "bbox": [
+      97.0,
+      544.0,
+      242.0,
+      575.0
+     ],
+     "page": 1
+    },
+    {
+     "text": "24-Dec-2026",
+     "confidence": 0.9923,
+     "bbox": [
+      358.0,
+      546.0,
+      537.0,
+      574.0
+     ],
+     "page": 1
+    },
+    {
+     "text": "Plot 14, Sector 62",
+     "confidence": 0.9996,
+     "bbox": [
+      898.0,
+      541.0,
+      1103.0,
+      568.0
+     ],
+     "page": 1
+    },
+    {
+     "text": "Noida, Uttar Pradesh 201301",
+     "confidence": 0.9989,
+     "bbox": [
+      897.0,
+      575.0,
+      1230.0,
+      604.0
+     ],
+     "page": 1
+    },
+    {
+     "text": "PO Number:",
+     "confidence": 0.9812,
+     "bbox": [
+      97.0,
+      597.0,
+      275.0,
+      628.0
+     ],
+     "page": 1
+    },
+    {
+     "text": "PO-55102",
+     "confidence": 0.9998,
+     "bbox": [
+      356.0,
+      594.0,
+      499.0,
+      628.0
+     ],
+     "page": 1
+    },
+    {
+     "text": "GSTIN: 09AAACA1234F1Z8",
+     "confidence": 0.9946,
+     "bbox": [
+      899.0,
+      617.0,
+      1281.0,
+      647.0
+     ],
+     "page": 1
+    },
+    {
+     "text": "#",
+     "confidence": 0.9967,
+     "bbox": [
+      106.0,
+      793.0,
+      136.0,
+      827.0
+     ],
+     "page": 1
+    },
+    {
+     "text": "Description",
+     "confidence": 1.0,
+     "bbox": [
+      231.0,
+      795.0,
+      402.0,
+      829.0
+     ],
+     "page": 1
+    },
+    {
+     "text": "Qty",
+     "confidence": 1.0,
+     "bbox": [
+      906.0,
+      791.0,
+      970.0,
+      835.0
+     ],
+     "page": 1
+    },
+    {
+     "text": "Rate",
+     "confidence": 1.0,
+     "bbox": [
+      1087.0,
+      792.0,
+      1164.0,
+      829.0
+     ],
+     "page": 1
+    },
+    {
+     "text": "Amount",
+     "confidence": 1.0,
+     "bbox": [
+      1310.0,
+      795.0,
+      1431.0,
+      826.0
+     ],
+     "page": 1
+    },
+    {
+     "text": "1",
+     "confidence": 1.0,
+     "bbox": [
+      109.0,
+      859.0,
+      134.0,
+      893.0
+     ],
+     "page": 1
+    },
+    {
+     "text": "A4 paper ream (500 sheets)",
+     "confidence": 0.9992,
+     "bbox": [
+      232.0,
+      862.0,
+      610.0,
+      893.0
+     ],
+     "page": 1
+    },
+    {
+     "text": "40",
+     "confidence": 1.0,
+     "bbox": [
+      907.0,
+      857.0,
+      953.0,
+      894.0
+     ],
+     "page": 1
+    },
+    {
+     "text": "285.00",
+     "confidence": 1.0,
+     "bbox": [
+      1088.0,
+      858.0,
+      1191.0,
+      893.0
+     ],
+     "page": 1
+    },
+    {
+     "text": "11,400.00",
+     "confidence": 1.0,
+     "bbox": [
+      1310.0,
+      859.0,
+      1450.0,
+      894.0
+     ],
+     "page": 1
+    },
+    {
+     "text": "2",
+     "confidence": 1.0,
+     "bbox": [
+      107.0,
+      916.0,
+      136.0,
+      952.0
+     ],
+     "page": 1
+    },
+    {
+     "text": "Ball pens, box of 50",
+     "confidence": 0.9998,
+     "bbox": [
+      232.0,
+      919.0,
+      500.0,
+      950.0
+     ],
+     "page": 1
+    },
+    {
+     "text": "10",
+     "confidence": 1.0,
+     "bbox": [
+      910.0,
+      916.0,
+      952.0,
+      951.0
+     ],
+     "page": 1
+    },
+    {
+     "text": "420.00",
+     "confidence": 1.0,
+     "bbox": [
+      1089.0,
+      916.0,
+      1191.0,
+      951.0
+     ],
+     "page": 1
+    },
+    {
+     "text": "4,200.00",
+     "confidence": 1.0,
+     "bbox": [
+      1310.0,
+      917.0,
+      1434.0,
+      952.0
+     ],
+     "page": 1
+    },
+    {
+     "text": "3",
+     "confidence": 1.0,
+     "bbox": [
+      108.0,
+      975.0,
+      134.0,
+      1009.0
+     ],
+     "page": 1
+    },
+    {
+     "text": "Stapler, heavy duty",
+     "confidence": 0.9939,
+     "bbox": [
+      231.0,
+      975.0,
+      492.0,
+      1012.0
+     ],
+     "page": 1
+    },
+    {
+     "text": "5",
+     "confidence": 1.0,
+     "bbox": [
+      908.0,
+      974.0,
+      936.0,
+      1009.0
+     ],
+     "page": 1
+    },
+    {
+     "text": "650.00",
+     "confidence": 1.0,
+     "bbox": [
+      1090.0,
+      975.0,
+      1189.0,
+      1008.0
+     ],
+     "page": 1
+    },
+    {
+     "text": "3,250.00",
+     "confidence": 1.0,
+     "bbox": [
+      1309.0,
+      972.0,
+      1435.0,
+      1010.0
+     ],
+     "page": 1
+    },
+    {
+     "text": "Sub Total",
+     "confidence": 1.0,
+     "bbox": [
+      997.0,
+      1074.0,
+      1131.0,
+      1106.0
+     ],
+     "page": 1
+    },
+    {
+     "text": "18,850.00",
+     "confidence": 1.0,
+     "bbox": [
+      1298.0,
+      1072.0,
+      1437.0,
+      1107.0
+     ],
+     "page": 1
+    },
+    {
+     "text": "IGST @ 12%",
+     "confidence": 0.9981,
+     "bbox": [
+      997.0,
+      1125.0,
+      1178.0,
+      1159.0
+     ],
+     "page": 1
+    },
+    {
+     "text": "2,262.00",
+     "confidence": 1.0,
+     "bbox": [
+      1294.0,
+      1123.0,
+      1421.0,
+      1162.0
+     ],
+     "page": 1
+    },
+    {
+     "text": "Grand Total",
+     "confidence": 1.0,
+     "bbox": [
+      998.0,
+      1195.0,
+      1170.0,
+      1226.0
+     ],
+     "page": 1
+    },
+    {
+     "text": "Rs. 21,112.00",
+     "confidence": 0.9769,
+     "bbox": [
+      1296.0,
+      1193.0,
+      1490.0,
+      1227.0
+     ],
+     "page": 1
+    },
+    {
+     "text": "Bank: HDFC Bank, A/C 50200012345678, IFSC HDFC0001234",
+     "confidence": 0.9974,
+     "bbox": [
+      96.0,
+      1312.0,
+      823.0,
+      1343.0
+     ],
+     "page": 1
+    },
+    {
+     "text": "Payment terms: Net 30. Please quote the invoice number with payment.",
+     "confidence": 0.9959,
+     "bbox": [
+      95.0,
+      1353.0,
+      912.0,
+      1384.0
+     ],
+     "page": 1
+    },
+    {
+     "text": "For Sharma Stationers",
+     "confidence": 1.0,
+     "bbox": [
+      1197.0,
+      2078.0,
+      1459.0,
+      2107.0
+     ],
+     "page": 1
+    },
+    {
+     "text": "Authorised Signatory",
+     "confidence": 1.0,
+     "bbox": [
+      1197.0,
+      2179.0,
+      1438.0,
+      2209.0
+     ],
+     "page": 1
+    }
+   ]
+  }
+ ]
+}

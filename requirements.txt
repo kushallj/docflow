@@ -1,0 +1,19 @@
+# Web + API
+Django==5.2.19
+djangorestframework==3.18.3
+django-filter==26.2
+dj-database-url==3.1.2
+python-dotenv==1.2.4
+whitenoise==6.12.0
+gunicorn==23.0.0
+psycopg[binary]==3.2.12
+
+# Background jobs
+celery==5.7.0
+redis==8.2.0
+
+# Documents + OCR
+pillow==13.0.0
+pypdfium2==5.15.2
+paddleocr==3.7.0
+# paddlepaddle is installed separately (CPU or GPU build), see README / Dockerfile
