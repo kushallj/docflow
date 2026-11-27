@@ -245,3 +245,16 @@ def test_duplicate_vendor_gstin_is_a_400_not_a_crash(seeded):
     g = Vendor.objects.get(name="Sharma Stationers").gstin
     r = admin.post("/api/vendors/", {"name": "Sharma Copy", "gstin": g}, format="json")
     assert r.status_code == 400 and "already exists" in json.dumps(r.json())
+
+
+def test_cors_preflight_allows_local_flutter_web(seeded, settings):
+    c = APIClient()
+    r = c.options("/api/rulesets/", HTTP_ORIGIN="http://localhost:5173",
+                  HTTP_ACCESS_CONTROL_REQUEST_METHOD="POST",
+                  HTTP_ACCESS_CONTROL_REQUEST_HEADERS="authorization,content-type")
+    assert r.status_code == 200
+    assert r["access-control-allow-origin"] == "http://localhost:5173"
+    assert "authorization" in r["access-control-allow-headers"].lower()
+    # non-API paths (dashboard, files) are never opened up cross-origin
+    r = c.get("/login/", HTTP_ORIGIN="http://localhost:5173")
+    assert "access-control-allow-origin" not in r
