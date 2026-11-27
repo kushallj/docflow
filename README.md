@@ -5,9 +5,10 @@ through a **configurable nested rule engine** that decides what happens next: au
 send to a review queue, or reject. Every decision comes with a condition-by-condition
 explanation, and every human correction is audited.
 
-The rule format is the same `Fact / Operator / Value` + `ALL / ANY` group model as the
-[Flutter rule builder](https://github.com/kushallj/Rule-Engine), so non-developers at each
-client can change their own document workflow without a code change or a deploy.
+Rules are edited visually in the [Flutter rule builder](https://github.com/kushallj/Rule-Engine)
+(same `Fact / Operator / Value` + `ALL / ANY` model), so non-developers at each client can
+change their own document workflow, and test it against real documents, without a code
+change or a deploy.
 
 ```
 upload (PDF / image)
@@ -126,7 +127,9 @@ organisation; roles are **admin** (rules, vendors), **reviewer** (corrections, d
 | `GET/POST/PATCH` | `/api/vendors/` | vendor master (GSTIN validated) |
 
 Uploaded files and page images are served only through `/files/…`, which checks that the file
-belongs to the caller's organisation.
+belongs to the caller's organisation. Browser front ends can call `/api/` cross-origin (token
+auth, no cookies): any `localhost` port in debug, otherwise the origins in `CORS_ALLOWED_ORIGINS`.
+List endpoints accept `?page_size=` up to 200.
 
 ## Run it
 
@@ -151,7 +154,7 @@ python manage.py runserver
 Then upload the files in `samples/invoices/` from the dashboard. Set `REDIS_URL` and run
 `celery -A config worker --concurrency=1` to process documents in the background instead.
 
-**Tests** (89 tests, ~45 s, no OCR model needed):
+**Tests** (90 tests, ~45 s, no OCR model needed):
 
 ```bash
 pytest
@@ -185,7 +188,6 @@ tests/          engine, extraction (real OCR fixtures), pipeline + API + tenancy
 
 ## Roadmap
 
-- Connect the Flutter rule builder to `/api/document-types/{slug}/facts/` and `/api/rulesets/`.
 - More document types (purchase orders, KYC, insurance claims) through new extractors.
 - Line-item table extraction (PaddleOCR PP-StructureV3) and three-way PO matching.
 - Optional LLM fallback for low-confidence fields; webhooks to push decisions to ERPs.
